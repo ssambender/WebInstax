@@ -8,7 +8,7 @@
 <p align="center">
   A free and open source site to turn any photo into a nostalgic memory!
   <br>
-  <a href="https://sambender.net/projects/simpleAnimationMaker/index.html"><strong>Try it Online »</strong></a>
+  <a href="https://ssambender.github.io/WebInstax/"><strong>Try it Online »</strong></a>
   <br>
 </p>
 
