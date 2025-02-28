@@ -1,3 +1,6 @@
+![WebInstax Logo Dark](https://github.com/ssambender/WebInstax/blob/main/WebInstaxLogoDark.png?raw=true#gh-light-mode-only)
+![WebInstax Logo Light](https://github.com/ssambender/WebInstax/blob/main/WebInstaxLogoLight.png?raw=true#gh-dark-mode-only)
+
 <br>
 
 <p align="center">
