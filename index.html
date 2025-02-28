@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebInstax</title>
+    <link rel="icon" href="WebInstaxLogoLightOutline.png" type="image/x-icon">
+</head>
+    <style>
+        @font-face {
+            font-family: 'FreshPalm';
+            src: url("Fresh Palm.otf");
+        }
+        @font-face {
+            font-family: 'WriteLine';
+            src: url("Writeline.otf");
+        }
+
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            overflow: hidden;
+            background: #f5f1e9; /* dark mode: #2E2C29 */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        #staticFrame {
+            box-shadow: 2px 4px 4px 2px rgba(0, 0, 0, 0.47);
+        }
+
+        .focusedBtn {
+            background: #f5f5f5;
+            outline: none;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 4px;
+            box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.47);
+            transition: box-shadow .2s, color .1s;
+            font-family: "FreshPalm", "Comic Sans MS", sans-serif;
+            font-size: 1.5rem;
+            color: rgba(46, 44, 41, 0.75);
+            display: none;
+        }
+        .focusedBtn:hover {
+            color: #2E2C29;
+            cursor: pointer;
+            transform: rotateZ(-2deg);
+            box-shadow: 2px 2px 3px 2px rgba(0, 0, 0, 0.47);
+            transition: box-shadow .2s, color .1s;
+        }
+        .focusedBtn:focus-visible {
+            border: solid 2px black;
+        }
+
+        #uploadBtn {
+            display: flex;
+        }
+
+        #captionText {
+            background: none;
+            outline: none;
+            border: none;
+            border-bottom: solid 1px rgba(0, 0, 0, 0);
+            text-align: center;
+            padding: 0;
+            margin: 0;
+            font-size: 2rem;
+            color: rgba(255, 255, 255, 0);
+            width: 45%;
+            transition: width .25s ease-in-out, border-bottom .2s;
+            display: none;
+        }
+        #captionText:active, #captionText:focus {
+            border-bottom: solid 1px rgba(0, 0, 0, 0.5);
+            width: 75%;
+            transition: width .25s ease-in-out, border-bottom .2s;
+        }
+        #captionText::-webkit-input-placeholder {
+            font-family: "FreshPalm", "Comic Sans MS", sans-serif;
+            opacity: 43%;
+            font-size: 2.5rem;
+        }
+
+        .gradientStripe {
+            width: 100%;
+            height: 100vh;
+            z-index: -3;
+            transform: rotateZ(-15deg) scaleX(200%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        .colorStripe {
+            width: 100%;
+            height: 30px;
+        }
+
+        .sec {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            height: 10vh;
+        }
+
+        #blackFill {
+            background: #2E2C29;
+            width: 384px;
+            height: 400px;
+            margin: 5px 10px 0 10px;
+            position: absolute;
+            top: 0;
+            z-index: -1;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes scaleIn {
+            from { transform: scale(50%); }
+            to { transform: scale(100%); }
+        }
+        @keyframes flash {
+            0% { opacity: 0; }
+            30% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        #heroTitle {
+            position:absolute;
+            top: 0;
+            text-align: center;
+            font-family: WriteLine, "Comic Sans MS", sans-serif;
+            font-size: 5rem;
+            padding-top: 11vh;
+            color: #2E2C29;
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 20px;
+            color: #2E2C29;
+            font-family: WriteLine, "Comic Sans MS", sans-serif;
+        }
+        .footer a {
+            color: inherit;
+            opacity: 50%;
+        }
+        .footer a:hover {
+            opacity: 100%;
+        }
+
+        #githubIcon {
+            width: 48px;
+            height: 48px;
+            position: absolute;
+            top: 24px;
+            left: 24px;
+        }
+
+        #lowerSec {
+            gap: 24px;
+        }
+
+        #captionTextContainer {
+            position: absolute;
+            bottom: 31px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        @media all and (orientation: portrait) {
+            #canvas, #staticFrame {
+                width: 202px;
+            }
+            #blackFill {
+                width: 188px;
+                height: 235px;
+            }
+            #heroTitle {
+                font-size: 4rem;
+                padding-top: 15vh;
+            }
+            .colorStripe {
+                height: 20px;
+            }
+            #githubIcon {
+                top: 12px;
+                left: 12px;
+            }
+
+            #lowerSec {
+                gap: 8px;
+            }
+
+            .mobileColumn {
+                flex-direction: column;
+            }
+
+            .sec {
+                height: 20vh;
+            }
+
+            #captionText::-webkit-input-placeholder {
+                font-size: 1.5rem;
+            }
+
+            #captionTextContainer {
+                bottom: 13px;
+            }
+
+            .footer {
+                font-size: .75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a id="githubIcon" href="https://github.com/ssambender/WebInstax" target="_blank">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#2E2C29" d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+    </a>
+
+    <div id="flashLayer" style="background: white; width: 100vw; height: 100vh; position: absolute; top: 0; left: 0; z-index: 5; opacity: 0%; pointer-events: none"></div>
+
+    <div id="heroTitle">
+        WebInstax
+    </div>
+
+    <div class="sec">
+        <input type="file" style="display: none" id="imageUpload" accept="image/*" style="position:absolute;">
+    </div>
+
+    <div class="sec" style="height: fit-content; user-select: none;">
+        <div style="position:relative;">
+            <canvas id="canvas" style="opacity: 0%;"></canvas>
+            <div id="blackFill"></div>
+            <img id="staticFrame" src="Frame.png" style="position: absolute; top: 0; left: 0; z-index: -1;">
+            <div id="captionTextContainer">
+                <input type="text" id="captionText" autocomplete="off" style="opacity: 0%" placeholder="Add Caption">
+            </div>
+        </div>
+    </div>
+
+    <div id="lowerSec" class="sec mobileColumn" style="display: flex;">
+        <button id="startoverBtn" class="focusedBtn" style="opacity: 0%; display: none;" onclick="window.location.reload();">Make Another</button>
+        <button id="downloadBtn" class="focusedBtn" style="opacity: 0%; display: none; color: #528dca;">Download Image</button>
+        <button id="uploadBtn" class="focusedBtn">Upload Image</button>
+    </div>
+
+    <div style="width: 100%; height: 100%; z-index: -3; position: absolute; top: 0; left: 0; overflow: hidden">
+        <div class="gradientStripe">
+            <div class="colorStripe" style="background: #b44625"></div>
+            <div class="colorStripe" style="background: #d5811c"></div>
+            <div class="colorStripe" style="background: #e1af1e"></div>
+            <div class="colorStripe" style="background: #91b32f"></div>
+            <div class="colorStripe" style="background: #528dca"></div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <a href="https://sambender.net" target="_blank">Sam Bender 2025</a>
+    </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fontfaceobserver/2.1.0/fontfaceobserver.js"></script>
+<script>
+    const templateSrc = 'FrameGrain.png';
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    const template = new Image();
+    template.src = templateSrc;
+    const downloadBtn = document.getElementById('downloadBtn');
+    let uploadedImage = new Image();
+    let newWidth, newHeight, xPos, yPos;
+    let randomRotation;
+    let originalImageName = "";
+
+    document.fonts.load('43px FreshPalm').then(function() {
+        document.getElementById('captionText').style.display = 'none';
+    });
+
+    var font = new FontFaceObserver('FreshPalm');
+
+    font.load().then(function () {
+        document.getElementById('captionText').style.display = 'none';
+    });
+
+    template.onload = function() {
+        canvas.width = template.width;
+        canvas.height = template.height;
+        ctx.drawImage(template, 0, 0);
+    };
+
+    function generateRandomRotation() {
+        //            random num between -5 and 5
+        randomRotation = (Math.random() * 10 - 5);
+    }
+
+    window.onload = generateRandomRotation;
+
+    document.getElementById('imageUpload').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        originalImageName = file.name.split('.').slice(0, -1).join('.');
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                uploadedImage.src = e.target.result;
+                uploadedImage.onload = () => {
+                    drawImage();
+                    document.getElementById('flashLayer').style.animation = 'flash .7s';
+                    document.getElementById("uploadBtn").style.display = 'none';
+                    document.getElementById('canvas').style.visibility = 'visible';
+                    setTimeout(() => {
+                        document.getElementById('canvas').style.animation = 'fadeIn 4s forwards';
+                    }, "500");
+                    setTimeout(() => {
+                        document.getElementById('captionText').style.display = 'inline';
+                    }, "1000");
+                    setTimeout(() => {
+                        document.getElementById('captionText').style.animation = "fadeIn 1s forwards";
+                        document.getElementById('downloadBtn').style.display = 'flex';
+                        document.getElementById('startoverBtn').style.display = 'flex';
+                    }, "1500");
+                    setTimeout(() => {
+                        document.getElementById('downloadBtn').style.animation = "fadeIn 1s forwards";
+                        document.getElementById('startoverBtn').style.animation = "fadeIn 1s forwards";
+                    }, "2000");
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    document.getElementById('captionText').addEventListener('input', drawImage);
+
+    function drawImage() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const aspectRatio = uploadedImage.width / uploadedImage.height;
+
+        // square images:
+        const widthDiff = Math.abs(uploadedImage.width - uploadedImage.height);
+        if (widthDiff <= 50){
+            newWidth = 352;
+            newHeight = 362;
+            xPos = (canvas.width - newWidth) / 2;
+            yPos = 29;
+        }
+        // portrait images:
+        else if (uploadedImage.height >= uploadedImage.width) {
+            newWidth = 352;
+            newHeight = newWidth / aspectRatio;
+            yPos = (canvas.height - newHeight) / 2;
+        }
+        // landscape images:
+        else {
+            newHeight = 362;
+            newWidth = newHeight * aspectRatio;
+            yPos = 29;
+        }
+        xPos = (canvas.width - newWidth) / 2;
+
+        ctx.drawImage(uploadedImage, xPos, yPos, newWidth, newHeight);
+        ctx.drawImage(template, 0, 0);
+
+        const caption = document.getElementById('captionText').value;
+        if (caption) {
+            ctx.save();
+            ctx.translate(canvas.width / 2, canvas.height - 37);
+            ctx.rotate(randomRotation * Math.PI / 180);
+            ctx.font = "43px FreshPalm";
+            ctx.fillStyle = "#191919";
+            ctx.textAlign = "center";
+            ctx.fillText(caption, 0, 0);
+            ctx.restore();
+        }
+
+        downloadBtn.style.visibility = 'visible';
+    }
+
+    document.getElementById("uploadBtn").addEventListener("click", function () {
+        document.getElementById("imageUpload").click();
+    });
+
+    // handling event based on jfriend00: https://stackoverflow.com/posts/10150042/revisions
+    function addEvent(elem, event, fn){
+        if(elem.addEventListener){
+            elem.addEventListener(event, fn, false);
+        }else{
+            elem.attachEvent("on" + event,
+                function(){ return(fn.call(elem, window.event)); });
+        }}
+    var element = document.getElementById('captionText');
+
+    addEvent(element,'focus',function(){
+        var that = this;
+        setTimeout(function(){ that.selectionStart = that.selectionEnd = 10000; }, 0);
+    });
+
+    downloadBtn.addEventListener('click', function() {
+        const link = document.createElement('a');
+        let filename = document.getElementById('captionText').value.trim();
+        if (filename.length === 0) {
+            filename = originalImageName + '_instant';
+        }
+        filename = filename.replace(/[\/\\:*?"<>|]/g, '');
+        link.download = filename + '.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+    });
+</script>
+</body>
+</html>
