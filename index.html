@@ -403,17 +403,59 @@
         setTimeout(function(){ that.selectionStart = that.selectionEnd = 10000; }, 0);
     });
 
+    let mobile = false;
+    console.log(navigator.userAgent);
+    function isMobileDevice() {
+        return /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    }
+    if (isMobileDevice()) {
+        mobile = true;
+    }
+    else {
+        console.log("Device: NOT mobile.");
+    }
+
     downloadBtn.addEventListener('click', function() {
-        const link = document.createElement('a');
-        let filename = document.getElementById('captionText').value.trim();
-        if (filename.length === 0) {
-            filename = originalImageName + '_instant';
+        if(mobile) {
+            //share via navigator
+            console.log("isMobile... share via navigator");
+            shareImage( canvas.toDataURL('image/png') );
         }
-        filename = filename.replace(/[\/\\:*?"<>|]/g, '');
-        link.download = filename + '.png';
-        link.href = canvas.toDataURL('image/png');
-        link.click();
+        else {
+            const link = document.createElement('a');
+            let filename = document.getElementById('captionText').value.trim();
+            if (filename.length === 0) {
+                filename = originalImageName + '_instant';
+            }
+            filename = filename.replace(/[\/\\:*?"<>|]/g, '');
+            link.download = filename + '.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+        console.log(canvas.toDataURL('image/png'));
     });
+
+    async function shareImage(img) {
+        // change download button in case didn't work
+        mobile = false;
+
+        const response = await fetch(img);
+        const blob = await response.blob();
+        const filesArray = [
+            new File(
+                [blob],
+                originalImageName.toString() + '_instant.jpg',
+                {
+                    type: "image/jpeg",
+                    lastModified: new Date().getTime()
+                }
+            )
+        ];
+        const shareData = {
+            files: filesArray,
+        };
+        await navigator.share(shareData);
+    }
 </script>
 </body>
 </html>
