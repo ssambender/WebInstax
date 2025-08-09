@@ -28,7 +28,7 @@ ___
 - [X] Optimize saving on mobile (with share navigator)
 - [X] Format site for mobile screen sizes
 - [ ] Add dark mode
-- [ ] Add support to upload GIFs
+- [ ] ~~Add support to upload GIFs~~
 
 _Feel free to submit a pull request for any of the above features!_
 
@@ -48,3 +48,9 @@ _Please report any bugs you find!_
 ### Fonts used:
 - Writeline font: https://www.dafont.com/writeline.font
 - Fresh Palm font: https://www.dafont.com/fresh-palm.font
+
+---
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/ssambender/WebInstax/refs/heads/main/WebinstaxScreenshot.png" alt="WebInstax Screenshot" height="505">
+</p>
