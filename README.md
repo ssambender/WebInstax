@@ -1,6 +1,6 @@
 <p align="center">
-  <img src="https://github.com/ssambender/WebInstax/blob/main/WebInstaxLogoDark.png?raw=true#gh-light-mode-only" alt="WebInstax Logo Dark" height="165">
-  <img src="https://github.com/ssambender/WebInstax/blob/main/WebInstaxLogoLight.png?raw=true#gh-dark-mode-only" alt="WebInstax Logo Light" height="165">
+  <img src="./WebInstaxLogoDark.png#gh-light-mode-only" alt="WebInstax Logo Dark" height="165">
+  <img src="./WebInstaxLogoLight.png#gh-dark-mode-only" alt="WebInstax Logo Light" height="165">
 </p>
 
 <h3 align="center">WebInstax | Simple web-based Instax photos</h3>
@@ -52,5 +52,5 @@ _Please report any bugs you find!_
 ---
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/ssambender/WebInstax/refs/heads/main/WebinstaxScreenshot.png" alt="WebInstax Screenshot" height="505">
+  <img src="WebinstaxScreenshot.png" alt="WebInstax Screenshot" height="505">
 </p>
